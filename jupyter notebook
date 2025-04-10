@@ -2,26 +2,36 @@ import numpy as np
 import pandas as pd
 
 df = pd.read_csv('/content/breast cancer (1).csv')
+
 df.head()
+
 df['diagnosis'].value_counts()
+
 df.isnull().sum()
-df2 = df.drop(columns=['Unnamed: 32'])  # Specify axis=1 or columns to drop a column
+
+df2 = df.drop(columns=['Unnamed: 32']) 
+
 df2['diagnosis']=df2['diagnosis'].map({'M':1,'B':0})
 df2.head()
+
 from sklearn.model_selection import train_test_split
 x=df2.drop(columns=['diagnosis'])
 y=df2['diagnosis']
 x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=42)
+
 from sklearn.preprocessing import StandardScaler
 sc=StandardScaler()
 x_train=sc.fit_transform(x_train)
 x_test=sc.transform(x_test)
+
 from sklearn.linear_model import LogisticRegression
 lr=LogisticRegression()
 lr.fit(x_train,y_train)
 
 predict=lr.predict(x_test)
+
 from sklearn.metrics import accuracy_score
 accuracy_score(y_test,predict)
+
 import pickle
 pickle.dump(lr,open('model.pkl','wb'))
